@@ -1,0 +1,94 @@
+{
+  "$schema": "https://unpkg.com/oh-my-opencode-slim@1.1.2/oh-my-opencode-slim.schema.json",
+  "preset": "openai",
+  "presets": {
+    "openai": {
+      "orchestrator": {
+        "model": "openai/gpt-5.6-terra",
+        "variant": "xhigh",
+        "skills": [
+          "*",
+          "!frontend-design",
+          "!make-interfaces-feel-better",
+          "!shadcn-svelte",
+          "!svelte-code-writer",
+          "!test-analysis-extensions",
+          "!test-anti-patterns",
+          "!testing-preferred-patterns",
+          "!web-perf"
+        ],
+        "mcps": [
+          "*",
+          "!chrome-devtools",
+          "!websearch",
+          "!context7",
+          "!grep_app"
+        ]
+      },
+      "oracle": {
+        "model": "openai/gpt-5.6-sol",
+        "variant": "xhigh",
+        "skills": [
+          "codebase-design",
+          "test-analysis-extensions",
+          "test-anti-patterns",
+          "web-perf"
+        ],
+        "mcps": ["codegraph", "chrome-devtools","websearch"]
+      },
+      "librarian": {
+        "model": "openai/gpt-5.6-luna",
+        "variant": "low",
+        "skills": [],
+        "mcps": ["websearch", "context7", "grep_app"]
+      },
+      "explorer": {
+        "model": "openai/gpt-5.6-luna",
+        "variant": "low",
+        "skills": [],
+        "mcps": ["codegraph"]
+      },
+      "designer": {
+        "model": "openai/gpt-5.6-sol",
+        "variant": "medium",
+        "skills": [
+          "frontend-design",
+          "make-interfaces-feel-better",
+          "shadcn-svelte",
+          "svelte-code-writer",
+          "web-perf"
+        ],
+        "mcps": ["codegraph", "chrome-devtools"]
+      },
+      "fixer": {
+        "model": "openai/gpt-5.6-luna",
+        "variant": "xhigh",
+        "skills": [
+          "tdd",
+          "resolving-merge-conflicts",
+          "svelte-code-writer",
+          "shadcn-svelte",
+          "testing-preferred-patterns",
+          "verification-before-completion"
+        ],
+        "mcps": ["codegraph","context7"]
+      }
+    }
+  },
+  "disabled_agents": ["observer"],
+  "disabled_mcps": ["websearch"],
+  "disabled_skills": [
+    "clonedeps",
+    "codemap",
+    "deepwork",
+    "oh-my-opencode-slim",
+    "reflect",
+    "simplify",
+    "worktrees"
+  ],
+  "image_routing": "direct",
+  "autoUpdate": false,
+  "multiplexer": {
+    "type": "none"
+  }
+}

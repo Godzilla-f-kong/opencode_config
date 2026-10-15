@@ -1,0 +1,79 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    // "bash": "ask"
+  },
+  "mcp": {
+    "hexstrike": {
+      "type": "local",
+      "command": [
+        "python",
+        "E:\\openCode\\hexstrike_mcp.py",
+        "--server",
+        "http://192.168.0.105:8888"
+      ],
+      "enabled": true
+    },
+    "ida-pro-mcp": {
+      "type": "local",
+      "command": [
+        "E:\\conda\\python.exe",
+        "C:\\Users\\mhb\\AppData\\Roaming\\Python\\Python313\\site-packages\\ida_pro_mcp\\server.py"
+      ],
+      "timeout": 1800
+    },
+    "sensitive-lexicon": {
+      "type": "local",
+      "command": [
+        "node",
+        "H:\\allPro\\youtube_copy_pro\\sensitive-mcp\\dist\\index.js"
+      ]
+    },
+    "whisper": {
+      "type": "local",
+      "command": [
+        "H:/allPro/youtube_copy_pro/Fast-Whisper-MCP-Server-main/.venv/Scripts/python.exe",
+        "H:/allPro/youtube_copy_pro/Fast-Whisper-MCP-Server-main/whisper_server.py"
+      ]
+    }
+  },
+  "skills": {
+    "paths": ["H:\\allPro\\aI_skills"]
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 10000
+  },
+  "provider": {
+    "uiui": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "UIUI",
+      "options": {
+        "baseURL": "https://sg.uiuiapi.com/v1",
+        "apiKey": "sk-ptHYs5GOPYK4VpZDwmKseGBNUu1VfdAmdfRH9y1Ufd47GGMV"
+      },
+      "models": {
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6"
+        }
+      }
+    },
+	"ollama-local": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama Local",
+      "options": {
+        "baseURL": "https://agent-api.cpolar.top/v1",
+        "apiKey": "ollama"
+      },
+      "models": {
+        "cyberstrike-offsec-35b:q8_0": {
+          "name": "cyberstrike-offsec-35b:q8_0"
+        },
+		"qwen3-42b-a3b-total-recall:q8_0": {
+          "name": "qwen3-42b-a3b-total-recall:q8_0"
+        }
+      }
+	  }
+	}
+}

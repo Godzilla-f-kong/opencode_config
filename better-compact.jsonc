@@ -1,0 +1,6 @@
+{
+  "$schema": "https://raw.githubusercontent.com/AshishKumar4/better-compact/master/packages/opencode/better-compact.schema.json",
+  "experimental": {
+    "allowSubAgents": true
+  }
+}

@@ -1,0 +1,114 @@
+diff --git a/packages/opencode/lib/config.ts b/packages/opencode/lib/config.ts
+index e2620c7..316338f 100644
+--- a/packages/opencode/lib/config.ts
++++ b/packages/opencode/lib/config.ts
+@@ -21,6 +21,7 @@ import {
+     normalizeSummaryEffort,
+     type CompactionConfig,
+ } from "@better-compact/core"
++import { supportsDirectorySync } from "./private-storage"
+ 
+ export type {
+     CompactionConfig,
+@@ -375,18 +376,20 @@ export function saveGlobalCompactionConfig(compaction: CompactionConfig): SaveGl
+         }
+         const mode = existsSync(path) ? statSync(path).mode & 0o777 : 0o600
+         writeFileSync(temp, updated, { encoding: "utf-8", mode })
+-        const temporaryHandle = openSync(temp, "r")
++        const temporaryHandle = openSync(temp, "r+")
+         try {
+             fsyncSync(temporaryHandle)
+         } finally {
+             closeSync(temporaryHandle)
+         }
+         renameSync(temp, path)
+-        const directoryHandle = openSync(dirname(path), "r")
+-        try {
+-            fsyncSync(directoryHandle)
+-        } finally {
+-            closeSync(directoryHandle)
++        if (supportsDirectorySync()) {
++            const directoryHandle = openSync(dirname(path), "r")
++            try {
++                fsyncSync(directoryHandle)
++            } finally {
++                closeSync(directoryHandle)
++            }
+         }
+         return { ok: true, path }
+     } catch (error) {
+diff --git a/packages/opencode/lib/private-storage.ts b/packages/opencode/lib/private-storage.ts
+index d73fa4e..50afa90 100644
+--- a/packages/opencode/lib/private-storage.ts
++++ b/packages/opencode/lib/private-storage.ts
+@@ -3,6 +3,12 @@ import { constants } from "node:fs"
+ import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path"
+ import { randomUUID } from "node:crypto"
+ 
++export function supportsDirectorySync(platform = process.platform): boolean {
++    // Node and Bun can open Windows directories, but fsync on those handles
++    // fails with EPERM after the atomic rename has already succeeded.
++    return platform !== "win32"
++}
++
+ export async function ensurePrivateDirectory(path: string, root?: string): Promise<void> {
+     if (root) await assertNoSymlinkPath(root, path)
+     try {
+@@ -44,11 +50,13 @@ export async function writePrivateFile(
+         if (root) await assertNoSymlinkPath(root, directory)
+         await fs.rename(temporary, path)
+         await fs.chmod(path, 0o600)
+-        const directoryHandle = await fs.open(directory, "r")
+-        try {
+-            await directoryHandle.sync()
+-        } finally {
+-            await directoryHandle.close()
++        if (supportsDirectorySync()) {
++            const directoryHandle = await fs.open(directory, "r")
++            try {
++                await directoryHandle.sync()
++            } finally {
++                await directoryHandle.close()
++            }
+         }
+     } catch (error) {
+         await handle?.close().catch(() => {})
+diff --git a/packages/opencode/tests/private-storage.test.ts b/packages/opencode/tests/private-storage.test.ts
+index 848c073..ed6f9ab 100644
+--- a/packages/opencode/tests/private-storage.test.ts
++++ b/packages/opencode/tests/private-storage.test.ts
+@@ -1,9 +1,13 @@
+ import assert from "node:assert/strict"
+ import test from "node:test"
+-import { mkdtempSync, mkdirSync, symlinkSync } from "node:fs"
++import { mkdtempSync, mkdirSync, readFileSync, symlinkSync } from "node:fs"
+ import { tmpdir } from "node:os"
+ import { join } from "node:path"
+-import { ensurePrivateDirectory, writePrivateFile } from "../lib/private-storage"
++import {
++    ensurePrivateDirectory,
++    supportsDirectorySync,
++    writePrivateFile,
++} from "../lib/private-storage"
+ import { createSessionState, saveSessionState } from "../lib/state"
+ import { Logger } from "../lib/logger"
+ 
+@@ -41,3 +45,18 @@ test("private storage rejects a symlinked ancestor below its trusted root", asyn
+         /Refusing symlinked Better Compact path/,
+     )
+ })
++
++test("private storage writes files when directory fsync is unavailable", async () => {
++    const root = mkdtempSync(join(tmpdir(), "better-compact-write-"))
++    const path = join(root, "state.json")
++
++    await writePrivateFile(path, '{"ok":true}', root)
++
++    assert.equal(readFileSync(path, "utf8"), '{"ok":true}')
++})
++
++test("directory fsync is disabled only on Windows", () => {
++    assert.equal(supportsDirectorySync("win32"), false)
++    assert.equal(supportsDirectorySync("linux"), true)
++    assert.equal(supportsDirectorySync("darwin"), true)
++})

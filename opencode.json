@@ -1,0 +1,159 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {},
+  "mcp": {
+    "hexstrike": {
+      "type": "local",
+      "command": [
+        "python",
+        "E:\\openCode\\hexstrike_mcp.py",
+        "--server",
+        "http://192.168.0.105:8888"
+      ],
+      "enabled": true
+    },
+    "ida-pro-mcp": {
+      "type": "local",
+      "command": [
+        "E:\\conda\\python.exe",
+        "C:\\Users\\mhb\\AppData\\Roaming\\Python\\Python313\\site-packages\\ida_pro_mcp\\server.py"
+      ],
+      "timeout": 1800
+    },
+    "sensitive-lexicon": {
+      "type": "local",
+      "command": [
+        "node",
+        "H:\\allPro\\youtube_copy_pro\\sensitive-mcp\\dist\\index.js"
+      ]
+    },
+    "whisper": {
+      "type": "local",
+      "command": [
+        "H:/allPro/youtube_copy_pro/Fast-Whisper-MCP-Server-main/.venv/Scripts/python.exe",
+        "H:/allPro/youtube_copy_pro/Fast-Whisper-MCP-Server-main/whisper_server.py"
+      ]
+    },
+    "codegraph": {
+      "type": "local",
+      "command": [
+        "codegraph",
+        "serve",
+        "--mcp"
+      ],
+      "enabled": false
+    },
+    "chrome-devtools": {
+      "type": "local",
+      "command": [
+        "bunx",
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ],
+      "enabled": false
+    }
+  },
+  "skills": {
+    "paths": [
+      "H:\\allPro\\aI_skills"
+    ]
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 10000
+  },
+  "provider": {
+    "uiui": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "UIUI",
+      "options": {
+        "baseURL": "https://sg.uiuiapi.com/v1",
+        "apiKey": "sk-ptHYs5GOPYK4VpZDwmKseGBNUu1VfdAmdfRH9y1Ufd47GGMV"
+      },
+      "models": {
+        "claude-sonnet-4-6": {
+          "name": "claude-sonnet-4-6"
+        }
+      }
+    },
+    "ollama-local": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama Local",
+      "options": {
+        "baseURL": "https://agent-api.cpolar.top/v1",
+        "apiKey": "ollama"
+      },
+      "models": {
+        "cyberstrike-offsec-35b:q8_0": {
+          "name": "cyberstrike-offsec-35b:q8_0"
+        },
+        "qwen3-42b-a3b-total-recall:q8_0": {
+          "name": "qwen3-42b-a3b-total-recall:q8_0"
+        }
+      }
+    },
+    "openai": {
+      "models": {
+        "gpt-5.6-sol": {
+          "limit": {
+            "context": 272000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-luna": {
+          "limit": {
+            "context": 272000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-terra": {
+          "limit": {
+            "context": 272000,
+            "output": 128000
+          }
+        }
+      }
+    },
+    "zhipuai-coding-plan": {
+      "models": {
+        "glm-5.2": {
+          "limit": {
+            "context": 272000,
+            "output": 131072
+          }
+        },
+        "glm-4.7": {
+          "limit": {
+            "context": 204800,
+            "output": 131072
+          }
+        }
+      }
+    }
+  },
+  "agent": {
+    "git-commit": {
+      "model": "zhipuai-coding-plan/glm-5.2",
+      "variant": "default",
+      "options": {},
+      "permission": {}
+    },
+    "title": {
+      "model": "zhipuai-coding-plan/glm-4.7",
+      "variant": "low",
+      "options": {},
+      "permission": {},
+      "prompt": "你是对话标题生成助手。根据当前对话内容生成一个简短、准确的中文标题。\n\n规则：\n1. 只输出标题本身，不要解释、标点、引号、Markdown 或换行。\n2. 标题使用中文，长度 4-10 个汉字为佳，最多不超过 12 个汉字。\n3. 优先概括用户最新且明确的主要意图，而不是历史背景。\n4. 使用“对象 + 动作”或“问题 + 处理”结构，例如：模型配置、权限放开、提交配置、问题排查。\n5. 保留必要英文技术名词，如 OpenCode、Git、API、MCP、TDD。\n6. 不包含 token、API key、路径中的隐私信息、账号或其他敏感内容。\n7. 避免“关于、讨论、总结、帮助、如何”等空泛词。\n8. 如果意图不明确，输出：未命名对话。"
+    }
+  },
+  "plugin": [
+    "H:/allPro/.opencode-runtime/slim/node_modules/oh-my-opencode-slim/dist/index.js",
+    "opencode-websearch@0.6.0"
+  ],
+  "share": "disabled",
+  "tool_output": {
+    "max_lines": 800,
+    "max_bytes": 24000
+  }
+}

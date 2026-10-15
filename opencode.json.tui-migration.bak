@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "keybinds": {
+    "input_paste": "ctrl+v, ctrl+alt+v, shift+insert"
+  },
+  "mcp": {
+    "hexstrike": {
+      "type": "local",
+      "command": [
+        "python",
+        "E:\\openCode\\hexstrike_mcp.py",
+        "--server",
+        "http://192.168.0.105:8888"
+      ],
+      "enabled": true
+    },
+    "ida-pro-mcp": {
+      "type": "local",
+      "command": ["E:\\conda\\python.exe", "C:\\Users\\mhb\\AppData\\Roaming\\Python\\Python313\\site-packages\\ida_pro_mcp\\server.py"],
+      "timeout": 1800
+    },
+    "sensitive-lexicon": {
+        "type": "local",
+        "command": ["node", "H:\\allPro\\youtube_copy_pro\\sensitive-mcp\\dist\\index.js"]
+    }
+  }
+}
